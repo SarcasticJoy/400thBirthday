@@ -43,20 +43,23 @@
     display: block;
   }
 
+  /* 10-20vh BUTTON AREA */
+  .button_row {
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
   .button_text {
     color: #f5d0d0;
     font-size: 1.8rem;
     margin: 0 10px 0 10px;
   }
 
-  /* 10-20vh BUTTON AREA */
   .buttons {
-    height: 20vh;
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    /*gap: 20px; Use if no text between buttons */
-
+    /* This is a wee bit redundant, but useful for making certain changes */
+    /*gap: 20px; Use if no text between buttons, may needcd to be in button_row */
     background: black;
     border-top: 1px solid rgba(120, 0, 0, 0.25);
   }
@@ -96,15 +99,17 @@
   </div>
 
   <!-- 10-20vh controls -->
-  <div class="buttons">
-    <button onclick="scrollPrev()">❮</button>
-  </div>
-  <div class="button_text">
-    <p>Scroll</p>
-  </div>
-  <div class="buttons">
-    <button onclick="scrollNext()">❯</button>
-  </div>
+   <div class="button_row">
+    <div class="buttons">
+      <button onclick="scrollPrev()">❮</button>
+    </div>
+    <div class="button_text">
+      <p>Scroll</p>
+    </div>
+    <div class="buttons">
+      <button onclick="scrollNext()">❯</button>
+    </div>
+   </div>
 
 <script>
   const carousel = document.getElementById("carousel");

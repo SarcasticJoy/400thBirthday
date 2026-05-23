@@ -41,10 +41,9 @@
     }
 
     .slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      position: relative; 
+      opacity: 1;         /* always visible */
+      flex-shrink: 0;     /* prevent shrinking */
     }
 
     .slide.active {

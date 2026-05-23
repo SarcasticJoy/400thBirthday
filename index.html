@@ -1,156 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vampire Carousel</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vampire Scroll Carousel</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      background: black;
-      overflow-x: hidden;
+  body {
+    background: black;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* prevents page scroll */
+  }
 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+  /* 90vh SCROLL AREA */
+  .carousel-wrapper {
+    height: 90vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+    scroll-snap-type: x mandatory; /* optional but nice */
+  }
 
-      min-height: 100vh;
-    }
+  /* each image container */
+  .slide {
+    flex: 0 0 auto;
+    height: 100%;
+    scroll-snap-align: start; /* optional */
+  }
 
-    .carousel-wrapper {
-      height: 90vh;
-      overflow-x: auto; /* enables horizontal scroll */
-      overflow-y: hidden;
-      white-space: nowrap; /* prevents line wrapping if multiple slides inline */
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      position: relative;
-    }
+  .slide img {
+    height: 100%;
+    width: auto; /* keeps 1500px natural width */
+    display: block;
+  }
 
-    .carousel {
-      display: flex;
-    }
+  /* 10vh BUTTON AREA */
+  .buttons {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 
-    .slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.8s ease-in-out;
-    }
+    background: black;
+    border-top: 1px solid rgba(120, 0, 0, 0.25);
+  }
 
-    .slide.active {
-      opacity: 1;
-      z-index: 1;
-    }
+  .buttons button {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 1px solid rgba(180, 0, 0, 0.6);
 
-    .slide img {
-      height: 100%; /* scale to 90vh */
-      width: auto;  /* keep original width, may exceed viewport */
-      display: block;
-    }
+    background: radial-gradient(circle at top,
+      rgba(140, 0, 0, 0.95),
+      rgba(55, 0, 0, 0.98));
 
-    .buttons {
-      position: absolute;
-      left: 0;
-      height:10vh;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-      padding: 0 16px;
-      z-index: 2;
-    }
+    color: #f5d0d0;
+    font-size: 1.8rem;
+    cursor: pointer;
 
-    .buttons button {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 1px solid rgba(180, 0, 0, 0.6);
-
-      background:
-        radial-gradient(circle at top,
-          rgba(140, 0, 0, 0.95),
-          rgba(55, 0, 0, 0.98));
-
-      color: #f5d0d0;
-      font-size: 1.8rem;
-      cursor: pointer;
-
-      box-shadow:
-        0 0 12px rgba(120, 0, 0, 0.6),
-        inset 0 0 10px rgba(255, 80, 80, 0.15);
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-    }
-
-    .buttons button:hover {
-      transform: scale(1.08);
-
-      background:
-        radial-gradient(circle at top,
-          rgba(180, 0, 0, 1),
-          rgba(75, 0, 0, 1));
-
-      box-shadow:
-        0 0 20px rgba(180, 0, 0, 0.8),
-        inset 0 0 14px rgba(255, 120, 120, 0.2);
-    }
-
-    .buttons button:active {
-      transform: scale(0.96);
-    }
-  </style>
+    box-shadow:
+      0 0 12px rgba(120, 0, 0, 0.6),
+      inset 0 0 10px rgba(255, 80, 80, 0.15);
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="carousel">
-
-    <div class="slide active">
-      <img src="imgs/1.webp" alt="First image">
+  <!-- 90vh horizontal scroll area -->
+  <div class="carousel-wrapper" id="carousel">
+    <div class="slide">
+      <img src="imgs/1.webp" alt="Image 1">
     </div>
 
     <div class="slide">
-      <img src="imgs/2.webp" alt="Second image">
+      <img src="imgs/2.webp" alt="Image 2">
     </div>
-    
   </div>
 
+  <!-- 10vh controls -->
   <div class="buttons">
-    <button onclick="prevSlide()">❮</button>
-    <button onclick="nextSlide()">❯</button>
+    <button onclick="scrollPrev()">❮</button>
+    <button onclick="scrollNext()">❯</button>
   </div>
 
-  <script>
-    const slides = document.querySelectorAll('.slide');
-    let index = 0;
+<script>
+  const carousel = document.getElementById("carousel");
+  const slides = document.querySelectorAll(".slide");
 
-    function showSlide(i) {
-      slides.forEach((slide, idx) => {
-        slide.classList.toggle('active', idx === i);
-      });
-    }
+  function scrollToIndex(i) {
+    const slide = slides[i];
+    carousel.scrollTo({
+      left: slide.offsetLeft,
+      behavior: "smooth"
+    });
+  }
 
-    function nextSlide() {
-      index = (index + 1) % slides.length;
-      showSlide(index);
-    }
+  function scrollNext() {
+    const width = slides.length;
+    const current = Math.round(carousel.scrollLeft / carousel.clientWidth);
+    const next = (current + 1) % width;
+    scrollToIndex(next);
+  }
 
-    function prevSlide() {
-      index = (index - 1 + slides.length) % slides.length;
-      showSlide(index);
-    }
-  </script>
+  function scrollPrev() {
+    const width = slides.length;
+    const current = Math.round(carousel.scrollLeft / carousel.clientWidth);
+    const prev = (current - 1 + width) % width;
+    scrollToIndex(prev);
+  }
+</script>
 
 </body>
 </html>
